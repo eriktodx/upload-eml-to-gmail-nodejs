@@ -69,11 +69,6 @@ async function appendProcessedFile(filename) {
 
 // Upload .eml file
 async function uploadEml(imapClient, emlPath, filename, processedFiles) {
-  if (processedFiles.has(filename)) {
-    logger.info(`Already processed, skipping...`);
-    return true;
-  }
-
   try {
     // Read and parse .eml file
     logger.info("Reading file...");
@@ -123,9 +118,6 @@ async function main() {
   let keepAlive = null;
 
   try {
-    // Load processed files
-    const processedFiles = await getProcessedFiles();
-
     // Connect to IMAP
     imapClient = await connectToImap();
 
@@ -135,9 +127,26 @@ async function main() {
       logger.info(`Keep-alive`);
     }, 1000 * 30); // Every 30 seconds
 
-    // Load list of .eml files
-    const files = (await fs.readdir(config.emlDir)).filter((filename) =>
+    // Load processed files
+    logger.info("Reading processed files...");
+    const processedFiles = await getProcessedFiles();
+
+    // Load list of files
+    logger.info("Reading directory...");
+    const allFiles = await fs.readdir(config.emlDir);
+
+    // Filter .eml files
+    logger.info("Filtering .eml files...");
+    const emlFiles = allFiles.filter((filename) =>
       filename.toLowerCase().endsWith(".eml")
+    );
+
+    // Filter not yet processed files
+    logger.info("Filtering processed files...");
+    const files = emlFiles.filter((filename) => !processedFiles.has(filename));
+
+    logger.info(
+      `Found ${allFiles.length} file(s), ${emlFiles.length} .eml file(s), ${files.length} file(s) not yet processed`
     );
 
     // Process .eml files
