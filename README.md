@@ -68,7 +68,7 @@ This Node.js application imports `.eml` email files into a specified Gmail label
 ## Usage
 1. **Run the Script**:
    ```bash
-   node index.js
+   node .
    ```
 
 2. **What Happens**:
@@ -85,8 +85,8 @@ This Node.js application imports `.eml` email files into a specified Gmail label
    - The console displays real-time progress, including the number of files processed, successes, and failures.
 
 ## File Structure
-- `index.js`: Main script that handles IMAP connection, file processing, and uploading.
-- `config.js`: Configuration file for IMAP settings, file paths, and Gmail label.
+- `src/index.js`: Main script that handles IMAP connection, file processing, and uploading.
+- `src/config.js`: Configuration file for IMAP settings, file paths, and Gmail label.
 - `package.json`: Project metadata and dependencies.
 - `LICENSE`: MIT License for the project.
 - `import_eml_log.txt`: Generated log file (after running the script).
